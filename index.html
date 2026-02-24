@@ -373,9 +373,60 @@
       margin-top:10px;
     }
 
+    /* Add Link Modal */
+    #addModal{
+      display:none;
+      position:fixed; inset:0; z-index:10002;
+      background:rgba(2,6,23,.72);
+      padding:22px;
+    }
+    .add-card{
+      max-width:620px; margin:10vh auto 0;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding:16px;
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .label{
+      color:rgba(255,255,255,.65);
+      font-size:.76rem;
+      font-weight:800;
+      letter-spacing:.12em;
+    }
+    .input{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      padding:12px 12px;
+      color:white;
+      font-size:.95rem;
+      outline:none;
+    }
+    .input:focus{ border-color: rgba(96,165,250,0.55); }
+    #addMsg{
+      margin-top:10px;
+      color:rgba(255,255,255,0.65);
+      font-size:.78rem;
+    }
+    .full{ grid-column: 1 / -1; }
+
     @media (max-width: 640px) {
       h1 { font-size: 1.8rem; }
       .grid { grid-template-columns: 1fr; }
+      .form-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -424,10 +475,11 @@
         <div>
           <div class="boss-tag">SECRET MODE UNLOCKED</div>
           <div class="boss-title">Boss Panel</div>
-          <div class="boss-desc">Backup link, import/export, dan reset sistem.</div>
+          <div class="boss-desc">Add link, backup link, import/export, dan reset sistem.</div>
         </div>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button id="btnAdd" class="btn-mini"><i data-lucide="plus" size="16"></i> ADD LINK</button>
           <button id="btnExport" class="btn-mini"><i data-lucide="download" size="16"></i> EXPORT</button>
           <button id="btnImport" class="btn-mini"><i data-lucide="upload" size="16"></i> IMPORT</button>
           <button id="btnResetLinks" class="btn-mini"><i data-lucide="rotate-ccw" size="16"></i> RESET</button>
@@ -521,6 +573,57 @@
     </div>
   </div>
 
+  <!-- ADD LINK MODAL -->
+  <div id="addModal">
+    <div class="add-card">
+      <div class="pin-row">
+        <div>
+          <div style="font-family:'Sora'; font-weight:800; letter-spacing:.14em; font-size:.78rem; color:#93c5fd;">
+            ADD LINK
+          </div>
+          <div style="font-family:'Sora'; font-weight:800; font-size:1.1rem; margin-top:6px;">
+            Tambah link baru
+          </div>
+          <div class="file-hint">Auto save ke sistem (local). Lepas add, terus muncul dekat dashboard.</div>
+        </div>
+
+        <button id="addClose" class="pin-close" title="Tutup">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <div class="field full">
+          <div class="label">TITLE</div>
+          <input id="addTitle" class="input" placeholder="Contoh: ForestVPN Dashboard" />
+        </div>
+
+        <div class="field full">
+          <div class="label">URL</div>
+          <input id="addUrl" class="input" placeholder="https://example.com/..." />
+        </div>
+
+        <div class="field">
+          <div class="label">CATEGORY</div>
+          <input id="addCat" class="input" placeholder="Contoh: VPN" />
+        </div>
+
+        <div class="field">
+          <div class="label">ICON (lucide)</div>
+          <input id="addIcon" class="input" placeholder="Contoh: shield" />
+        </div>
+      </div>
+
+      <div class="import-actions" style="margin-top:12px;">
+        <button id="addSave" class="btn-mini"><i data-lucide="save" size="16"></i> SAVE</button>
+        <button id="addQuickShield" class="btn-mini"><i data-lucide="shield" size="16"></i> ICON: SHIELD</button>
+        <button id="addQuickGlobe" class="btn-mini"><i data-lucide="globe" size="16"></i> ICON: GLOBE</button>
+      </div>
+
+      <div id="addMsg">Tip: URL mesti bermula dengan <b>http://</b> atau <b>https://</b> (atau relative macam <b>./page.html</b>).</div>
+    </div>
+  </div>
+
   <script>
     // =========================
     // DEFAULT LINKS (asal)
@@ -568,7 +671,6 @@
 
         if (!title || !url || !cat) continue;
 
-        // basic URL allow: http(s) or relative (./, /)
         const okUrl =
           /^https?:\/\/.+/i.test(url) ||
           /^\.{1,2}\//.test(url) ||
@@ -724,7 +826,7 @@
       lucide.createIcons();
     }
 
-    // ========= Boss tools (Export/Import/Reset) =========
+    // ========= Boss tools (Add/Export/Import/Reset) =========
     function setBossMsg(msg) {
       const el = document.getElementById('bossMsg');
       if (el) el.innerHTML = msg;
@@ -808,6 +910,66 @@
       reader.readAsText(file);
     }
 
+    // ========= Add Link =========
+    function openAddModal() {
+      document.getElementById('addTitle').value = "";
+      document.getElementById('addUrl').value = "";
+      document.getElementById('addCat').value = "";
+      document.getElementById('addIcon').value = "link";
+      document.getElementById('addMsg').innerHTML = "Tip: URL mesti bermula dengan <b>http://</b> atau <b>https://</b> (atau relative macam <b>./page.html</b>).";
+      document.getElementById('addModal').style.display = "block";
+      setTimeout(() => document.getElementById('addTitle').focus(), 30);
+      lucide.createIcons();
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').style.display = "none";
+    }
+
+    function isValidUrl(u) {
+      return (
+        /^https?:\/\/.+/i.test(u) ||
+        /^\.{1,2}\//.test(u) ||
+        /^\//.test(u)
+      );
+    }
+
+    function addLinkSave() {
+      const title = document.getElementById('addTitle').value.trim();
+      const url = document.getElementById('addUrl').value.trim();
+      const cat = document.getElementById('addCat').value.trim().toUpperCase();
+      const icon = document.getElementById('addIcon').value.trim() || "link";
+      const msg = document.getElementById('addMsg');
+
+      if (!title || !url || !cat) {
+        msg.innerHTML = "<span style='color:#f87171; font-weight:800;'>Wajib isi:</span> Title, URL, Category.";
+        return;
+      }
+      if (!isValidUrl(url)) {
+        msg.innerHTML = "<span style='color:#f87171; font-weight:800;'>URL tak sah.</span> Letak http(s):// atau ./relative";
+        return;
+      }
+
+      const newItem = { title, url, cat, icon };
+
+      // prevent duplicates by exact url
+      const exists = myLinks.some(l => (l.url || "").toLowerCase() === url.toLowerCase());
+      if (exists) {
+        msg.innerHTML = "<span style='color:#f87171; font-weight:800;'>URL dah ada.</span> Kalau nak, tukar URL atau edit via import/export.";
+        return;
+      }
+
+      const updated = [newItem, ...myLinks];
+      saveLinks(updated);
+
+      activeCat = "ALL";
+      renderFilterBar();
+      render();
+
+      closeAddModal();
+      setBossMsg(`Add: <b>${title}</b> ditambah ✅`);
+    }
+
     window.onload = () => {
       renderFilterBar();
       render();
@@ -838,6 +1000,7 @@
       });
 
       // Boss tools
+      document.getElementById('btnAdd')?.addEventListener('click', openAddModal);
       document.getElementById('btnExport')?.addEventListener('click', exportLinks);
       document.getElementById('btnImport')?.addEventListener('click', openImportModal);
       document.getElementById('btnResetLinks')?.addEventListener('click', resetLinksToDefault);
@@ -848,7 +1011,6 @@
         if (e.target.id === 'importModal') closeImportModal();
       });
       document.getElementById('importApply')?.addEventListener('click', applyImportFromText);
-
       document.getElementById('importFileBtn')?.addEventListener('click', () => {
         document.getElementById('importFile').click();
       });
@@ -856,6 +1018,20 @@
         const file = e.target.files && e.target.files[0];
         handleImportFile(file);
         e.target.value = "";
+      });
+
+      // Add modal handlers
+      document.getElementById('addClose')?.addEventListener('click', closeAddModal);
+      document.getElementById('addModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'addModal') closeAddModal();
+      });
+      document.getElementById('addSave')?.addEventListener('click', addLinkSave);
+
+      document.getElementById('addQuickShield')?.addEventListener('click', () => {
+        document.getElementById('addIcon').value = "shield";
+      });
+      document.getElementById('addQuickGlobe')?.addEventListener('click', () => {
+        document.getElementById('addIcon').value = "globe";
       });
 
       lucide.createIcons();
