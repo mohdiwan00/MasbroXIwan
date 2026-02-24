@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- Rasmi / SEO -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RandomLinkMasbro | Command Center Rasmi</title>
+  <meta name="description" content="Laman rasmi RandomLinkMasbro — Pusat Kawalan Digital untuk akses pantas ke sistem, arkib, dan tools harian.">
+  <meta name="author" content="Mohd Iwan">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Social preview -->
+  <meta property="og:title" content="RandomLinkMasbro | Command Center Rasmi">
+  <meta property="og:description" content="Pusat Kawalan Digital rasmi untuk akses sistem dan arkib penting.">
+  <meta property="og:type" content="website">
+  <!-- Bila dah ada domain + image nanti -->
+  <!-- <meta property="og:image" content="https://domain-kau.com/assets/og-image.png"> -->
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .font-sora { font-family: 'Sora', sans-serif; }
+    .blob {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.15;
+    }
+    .blob-1 { top: -100px; left: -100px; background: #9333ea; }
+    .blob-2 { bottom: -100px; right: -100px; background: #2563eb; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 15px; }
+    .logo-box {
+      background: #2563eb;
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(37,99,235,0.4);
+    }
+    h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; }
+    .text-blue { color: #60a5fa; }
+    .subtag {
+      color:#94a3b8;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    .glass-clock {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 15px 35px;
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    #clock { font-size: 1.8rem; font-weight: 800; font-family: 'Sora'; text-align: center; }
+    .status {
+      color: #34d399;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .search-bar {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 18px 25px;
+      border-radius: 20px;
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 14px;
+      outline: none;
+      transition: 0.3s;
+    }
+    .search-bar:focus { border-color: #2563eb; }
+
+    /* Quick Filter Bar */
+    .filterbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom: 22px;
+    }
+    .filter-btn{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+      color:#dbeafe;
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:.72rem;
+      letter-spacing:.10em;
+      cursor:pointer;
+      transition:.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .filter-btn:hover{
+      background:rgba(59,130,246,.18);
+      border-color:transparent;
+      transform:translateY(-1px);
+    }
+    .filter-btn.active{
+      background:#2563eb;
+      border-color:transparent;
+      color:white;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px;
+      border-radius: 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); }
+
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+
+    .icon-link {
+      width: 55px;
+      height: 55px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .icon-link:hover { background: #2563eb; transform: scale(1.05); border-color: transparent; }
+
+    .content-area { margin-top: 5px; }
+    .cat-tag { font-size: 0.6rem; font-weight: 800; color: #60a5fa; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .card h3 { font-family: 'Sora'; font-size: 1.5rem; font-weight: 700; color: #f8fafc; }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 14px 20px;
+      border-radius: 18px;
+      text-decoration: none;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 10px;
+    }
+    .btn-action:hover { background: #2563eb; border-color: transparent; padding-right: 15px; }
+    .btn-action span { opacity: 0.8; }
+    .btn-action:hover span { opacity: 1; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 1.8rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="container">
+    <header>
+      <div class="logo-area">
+        <div class="logo-box"><i data-lucide="layout-grid" color="white" size="24"></i></div>
+        <div>
+          <h1 class="font-sora text-blue">RandomLinkMasbro</h1>
+          <div class="subtag">COMMAND CENTER RASMI</div>
+          <p id="date" style="color:#64748b; font-size: 0.8rem; font-weight: 600; margin-top:6px;"></p>
+        </div>
+      </div>
+      <div class="glass-clock">
+        <div id="clock">00:00:00</div>
+        <div class="status">
+          <span style="width:5px; height:5px; background:#34d399; border-radius:50%;"></span> SISTEM AKTIF
+        </div>
+      </div>
+    </header>
+
+    <input type="text" id="searchInput" class="search-bar" placeholder="Cari arkib data, kategori, atau pautan...">
+
+    <!-- Quick Filters -->
+    <div class="filterbar" id="filterbar"></div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    // =========================
+    // Data Pautan (edit sini)
+    // =========================
+    const myLinks = [
+      { title: 'GitHub Masbro', url: 'https://github.com/mohdiwan00', cat: 'DEV', icon: 'github' },
+      { title: 'ChatGPT', url: 'https://chat.openai.com/', cat: 'AI', icon: 'sparkles' },
+      { title: 'Speedtest', url: 'https://www.speedtest.net/', cat: 'NETWORK', icon: 'gauge' },
+      { title: 'iCloud', url: 'https://www.icloud.com/', cat: 'CLOUD', icon: 'cloud' },
+      { title: 'Apple Account', url: 'https://account.apple.com/sign-in', cat: 'SECURITY', icon: 'shield-check' },
+      { title: 'Google', url: 'https://www.google.com', cat: 'SEARCH', icon: 'search' },
+      { title: 'ForestVPN Dashboard', url: 'https://forestvpn.com/en/dash/', cat: 'VPN', icon: 'shield' }
+    ];
+
+    let activeCat = 'ALL';
+
+    function renderFilterBar() {
+      const filterbar = document.getElementById('filterbar');
+      const cats = ['ALL', ...new Set(myLinks.map(l => l.cat))];
+
+      filterbar.innerHTML = cats.map(cat => `
+        <button class="filter-btn ${cat === activeCat ? 'active' : ''}" data-cat="${cat}">
+          ${cat}
+        </button>
+      `).join('');
+
+      filterbar.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeCat = btn.dataset.cat;
+          renderFilterBar();
+          render();
+        });
+      });
+    }
+
+    function render() {
+      const term = document.getElementById('searchInput').value.trim().toLowerCase();
+      const grid = document.getElementById('grid');
+
+      const filtered = myLinks.filter(l => {
+        const matchSearch =
+          l.title.toLowerCase().includes(term) ||
+          l.cat.toLowerCase().includes(term) ||
+          l.url.toLowerCase().includes(term);
+
+        const matchCat = (activeCat === 'ALL') ? true : (l.cat === activeCat);
+        return matchSearch && matchCat;
+      });
+
+      // Empty state (rasmi)
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed rgba(255,255,255,0.18);
+            border-radius: 30px;
+            padding: 28px;
+            text-align: center;
+            color: rgba(255,255,255,0.65);
+          ">
+            <div style="font-family:'Sora'; font-weight:800; font-size:1.1rem; margin-bottom:8px;">
+              Tiada rekod dijumpai
+            </div>
+            <div style="font-size:0.85rem;">
+              Cuba kata kunci lain atau klik kategori <b>ALL</b>.
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = filtered.map(link => `
+        <div class="card">
+          <div class="card-top">
+            <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="icon-link">
+              <i data-lucide="${link.icon}" size="24"></i>
+            </a>
+            <button style="background:none; border:none; color:rgba(255,255,255,0.2); cursor:pointer;">
+              <i data-lucide="more-horizontal" size="20"></i>
+            </button>
+          </div>
+          <div class="content-area">
+            <div class="cat-tag">${link.cat}</div>
+            <h3>${link.title}</h3>
+          </div>
+          <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="btn-action">
+            <span>AKSES DATA</span>
+            <i data-lucide="arrow-right" size="16"></i>
+          </a>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString('ms-MY', {hour12: false});
+      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      document.getElementById('date').innerText = now.toLocaleDateString('ms-MY', options).toUpperCase();
+    }
+
+    window.onload = () => {
+      renderFilterBar();
+      render();
+      updateTime();
+      setInterval(updateTime, 1000);
+      document.getElementById('searchInput').addEventListener('input', render);
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
